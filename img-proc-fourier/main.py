@@ -47,8 +47,8 @@ def task_1(file_path=DEFAULT_IMAGES[0], radius_min=25., radius_max=55.):
     # the functions to apply inside and outside the ring
     ring_mask = EucRingMask(input_image.shape,
                             func_inside_ring, func_outside_ring,
-                         radius_min, radius_max,
-                         image_center)
+                            radius_min, radius_max,
+                            image_center)
 
     # The image containing the ring (filled with black inside) 
     output_image_array = ring_mask.apply_mask(input_image)
@@ -83,30 +83,32 @@ def task_2(image_path=DEFAULT_IMAGES[0], radius_min=25., radius_max=55.):
     input_image_array = read_image(image_path, as_array=True)
 
     # Apply fast Fourier transformation to an image
-    fft_image_array = np.fft.fft2(input_image_array)
+    ft_image_array = np.fft.fft2(input_image_array)
 
-    # Shift the Fourier image to the center of the image  
-    ft_image = np.fft.fftshift(fft_image_array)
+    # Shift the Fourier image to the center of the image
+    shift_ft_image = np.fft.fftshift(ft_image_array)
 
     # create and apply a ring shaped frequency mask on a Fourier transform of an image
     # where the mask suppresses the frequencies outside the ring
     func_inside_ring = lambda x: x  # no change to the element, i.e. allow the frequency
     func_outside_ring = lambda x: 0  # set element to zero, i.e. suppress the frequency
-    center = (ft_image.shape[0] / 2, ft_image.shape[1] / 2)  # center of the ring
+    center = (shift_ft_image.shape[0] / 2, shift_ft_image.shape[1] / 2)  # center of the ring
 
     # Create and apply the RingMask
-    ring_freq_mask = EucRingMask(ft_image.shape,
+    ring_freq_mask = EucRingMask(shift_ft_image.shape,
                                  func_inside_ring, func_outside_ring,
-                              radius_min, radius_max,
-                              center)
-    suppressed_ft_image = ring_freq_mask.apply_mask(ft_image)
+                                 radius_min, radius_max,
+                                 center)
+    suppressed_ft_image = ring_freq_mask.apply_mask(shift_ft_image)
 
+    # inverse the shifting of fft
+    shift_suppressed_ft_image = np.fft.ifftshift(suppressed_ft_image)
     # image from the suppressed FT
-    output_image = np.fft.ifft2(suppressed_ft_image)
+    output_image = np.fft.ifft2(shift_suppressed_ft_image)
 
     # output results
     # calculate absolutes for saving and plotting
-    abs_ft_image = magnitude(ft_image)
+    abs_ft_image = magnitude(shift_ft_image)
     abs_suppressed_ft_image = magnitude(suppressed_ft_image)
     abs_output_image = magnitude(output_image)
 
