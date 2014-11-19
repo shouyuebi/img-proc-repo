@@ -25,3 +25,13 @@ def euclidean_2d_array(array_shape, from_el_loc):
     # generate the return array by matrix multiplication
     return sqrt((col_array - from_el_loc[0]) ** 2 + (row_array - from_el_loc[1]) ** 2)
 
+
+def manhattan_2d_array(array_shape, from_el_loc):
+    assert len(array_shape) == len(from_el_loc), "array shape and element location dimension mismatch"
+    assert len(array_shape) == 2, "Only 2D supported in the function"  # TODO: _ndChanges
+
+    # create col and row arrays with values of all possible x and y coordinates respectively
+    col_array, row_array = ogrid[0:array_shape[0], 0:array_shape[1]]
+
+    # generate the return array by matrix multiplication
+    return abs(col_array - from_el_loc[0]) + abs(row_array - from_el_loc[1])

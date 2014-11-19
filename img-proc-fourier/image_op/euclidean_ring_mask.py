@@ -2,7 +2,7 @@ from image_op.mask import Mask
 from calc.distance import euclidean_2d_array
 
 
-class RingMask(Mask):
+class EucRingMask(Mask):
     def __init__(self, original_array_shape, func_true, func_false, radius_inner, radius_outer, center):
         """
         Initialize a RingMask object of class Mask
@@ -33,8 +33,8 @@ class RingMask(Mask):
         :param center: tuple
                        location of the center of the ring
         """
-        super(RingMask, self).__init__(original_array_shape,
-                                       func_true, func_false=func_false)
+        super(EucRingMask, self).__init__(original_array_shape,
+                                          func_true, func_false=func_false)
         self.radius_inner = radius_inner
         self.radius_outer = radius_outer
         self.center = center

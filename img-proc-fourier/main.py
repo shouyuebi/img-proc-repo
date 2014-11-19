@@ -2,7 +2,7 @@
 from image_op.image_io import read_image, save_array_as_gray_image
 from calc.fourier_calc import magnitude
 from image_op.image_manip import combine_magnitude_and_phase
-from image_op.ring_mask import RingMask
+from image_op.euclidean_ring_mask import EucRingMask
 from plot import plot_multiple_arrays
 
 # imports from libraries
@@ -45,8 +45,8 @@ def task_1(file_path=DEFAULT_IMAGES[0], radius_min=25., radius_max=55.):
 
     # Create a mask object containing the area of the ring and 
     # the functions to apply inside and outside the ring
-    ring_mask = RingMask(input_image.shape,
-                         func_inside_ring, func_outside_ring,
+    ring_mask = EucRingMask(input_image.shape,
+                            func_inside_ring, func_outside_ring,
                          radius_min, radius_max,
                          image_center)
 
@@ -95,8 +95,8 @@ def task_2(image_path=DEFAULT_IMAGES[0], radius_min=25., radius_max=55.):
     center = (ft_image.shape[0] / 2, ft_image.shape[1] / 2)  # center of the ring
 
     # Create and apply the RingMask
-    ring_freq_mask = RingMask(ft_image.shape,
-                              func_inside_ring, func_outside_ring,
+    ring_freq_mask = EucRingMask(ft_image.shape,
+                                 func_inside_ring, func_outside_ring,
                               radius_min, radius_max,
                               center)
     suppressed_ft_image = ring_freq_mask.apply_mask(ft_image)
